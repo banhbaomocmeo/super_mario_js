@@ -9,7 +9,7 @@ function  loadImage(url) {
 	})
 }
 
-const  canvas = document.getElementById('screen')
+const canvas = document.getElementById('screen')
 const context = canvas.getContext('2d')
 
 context.fillRect(0, 0, 50, 50)
@@ -17,15 +17,15 @@ context.fillRect(0, 0, 50, 50)
 loadImage('./img/tiles.png')
 .then(image => {
 
-	const sprites = new SpriteSheet(image, 16, 16)
-	sprites.define('')
+	// const sprites = new SpriteSheet(image, 16, 16)
+	// sprites.define('')
 
 	context.drawImage(
 		image, 
-		0, 0,	
-		16, 16,
-		0, 0,
-		16, 16
+		0, 0,			// toa do cat
+		16, 16,		// width, height cat
+		0, 0,			// toa do ve
+		16, 16		//width,  height ve
 	)
 
 
