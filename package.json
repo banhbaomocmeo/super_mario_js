@@ -1,0 +1,23 @@
+{
+  "name": "super_mario_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start":  "serve ./public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/banhbaomocmeo/super_mario_js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/banhbaomocmeo/super_mario_js/issues"
+  },
+  "homepage": "https://github.com/banhbaomocmeo/super_mario_js#readme",
+  "dependencies": {
+    "serve": "^10.0.2"
+  }
+}
