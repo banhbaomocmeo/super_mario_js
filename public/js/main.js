@@ -1,34 +1,32 @@
-function  loadImage(url) {
-	return new Promise(resolve => {
-		const image = new Image();
-		image.addEventListener('load', () => {
-			resolve(image)
-		})
-		image.src =url
-		console.log(image)
-	})
-}
+import Compositor from './Compositor.js'
+import {loadLevel} from './loader.js'
+import {loadBGSprites} from './sprites.js'
+import {createBackgroundLayer, createSpriteLayer} from './layers.js'
+import {createMario} from './entities.js'
+import Timer from './Timer.js'
+
 
 const canvas = document.getElementById('screen')
 const context = canvas.getContext('2d')
 
-context.fillRect(0, 0, 50, 50)
-
-loadImage('./img/tiles.png')
-.then(image => {
-
-	// const sprites = new SpriteSheet(image, 16, 16)
-	// sprites.define('')
-
-	context.drawImage(
-		image, 
-		0, 0,			// toa do cat
-		16, 16,		// width, height cat
-		0, 0,			// toa do ve
-		16, 16		//width,  height ve
-	)
 
 
-
+Promise.all([loadBGSprites(), loadLevel('1-1'), createMario()])
+.then(([bgSprites, level, mario]) => {
+	const FPS = 60
+	const gravity = 30
+	const comp = new Compositor()
+	const backgroundLayer = createBackgroundLayer(level.backgrounds, bgSprites)
+	const spriteLayer = createSpriteLayer(mario)
+	comp.layers.push(backgroundLayer, spriteLayer)
+	mario.pos.set(64, 180)
+	mario.vel.set(200, -600)
+	// FPS
+	const timer = new Timer(1/FPS)
+	timer.update = function update(deltaTime) {
+		comp.draw(context)
+		mario.update(deltaTime)
+		mario.vel.y += gravity
+	}
+	timer.start()
 })
-
