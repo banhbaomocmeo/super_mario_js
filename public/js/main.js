@@ -25,7 +25,20 @@ Promise.all([loadLevel('1-1'), createMario()])
 			mario.jump.cancel()
 		}
 	})
+
 	input.listenTo(window)	
+	var events = ['mousedown', 'mousemove']
+	events.forEach(element => {
+		console.log('wtf')
+
+		canvas.addEventListener(element, event => {
+			if(event.buttons === 1) {
+				mario.vel.set(0, 0);
+				mario.pos.set(event.offsetX, event.offsetY)
+			}
+		})
+	});
+
 
 	// FPS
 	const timer = new Timer(1/FPS)
