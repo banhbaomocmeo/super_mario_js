@@ -11,13 +11,13 @@ export function createBackgroundLayer(level, sprites) {
 
 	})
 
-    return function backgroundLayer(context) {
-        context.drawImage(buffer, 0, 0)
+    return function backgroundLayer(context, camera) {
+        context.drawImage(buffer, -camera.pos.x, -camera.pos.y)
     }
 }
 
 export function createSpriteLayer(entities) {
-	return function spriteLayer(context) {
+	return function spriteLayer(context, camera) {
 		entities.forEach(entity => {
 			entity.draw(context)
 		})
@@ -34,17 +34,23 @@ export function createCollisionLayer(level) {
 	
 	tileResolver.getByIndex = function getByIndexFake(x, y) {
 		resolevedTiles.push({x, y})
-		// console.log(x, y)
 		return getByIndexOriginal.call(tileResolver, x, y)
 	}
 
-	return function drawCollision(context) {
+	return function drawCollision(context, camera) {
 		context.strokeStyle = 'blue'
 		resolevedTiles.forEach(({x, y}) => {
 			context.beginPath()
 			context.rect(x * tileSize, y * tileSize, tileSize, tileSize)
 			context.stroke()
 		})
+		context.strokeStyle = 'red'
+		level.entities.forEach(entity => {
+			context.beginPath()
+			context.rect(entity.pos.x, entity.pos.y, entity.size.x, entity.size.x)
+			context.stroke()
+		})
+
 		resolevedTiles.length = 0
 	}
 }
