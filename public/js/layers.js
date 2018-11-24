@@ -23,3 +23,11 @@ export function createSpriteLayer(entities) {
 		})
 	}
 }
+
+export function createCollisionLayer(level) {
+	const tileResolver = level.tileCollider.tiles 
+	const tileSize = tileResolver.tileSize
+
+	const getByIndexOriginal = tileResolver.getByIndex 
+	
+}
