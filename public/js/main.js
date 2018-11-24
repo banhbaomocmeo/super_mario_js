@@ -2,6 +2,7 @@ import {loadLevel} from './loader.js'
 import {createMario} from './entities.js'
 import Timer from './Timer.js'
 import Keyboard from './KeyboardState.js'
+import {createCollisionLayer} from './layers.js'
 
 const canvas = document.getElementById('screen')
 const context = canvas.getContext('2d')
@@ -16,6 +17,8 @@ Promise.all([loadLevel('1-1'), createMario()])
 	mario.pos.set(64, 180)
 	mario.vel.set(200, -600)
 	level.entities.add(mario)
+	level.comp.layers.push(createCollisionLayer(level));
+
 	//Keyboard
 	const input = new Keyboard()
 	input.addMapping(32, keyState => {

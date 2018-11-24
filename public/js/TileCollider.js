@@ -6,7 +6,7 @@ export default class TileCollider {
     }
 
     checkY(entity) {
-        const match = this.tiles.matchByPosition(entity.pos.y, entity.pos.y)
+        const match = this.tiles.matchByPosition(entity.pos.x, entity.pos.y)
         if(!match) {
             return
         }
@@ -15,7 +15,6 @@ export default class TileCollider {
         }
         if(entity.vel.y > 0) {
             if(entity.pos.y > match.y1) {
-                console.log(match.y1)
                 entity.pos.y = match.y1
                 entity.vel.y = 0
             }

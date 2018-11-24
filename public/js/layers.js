@@ -25,9 +25,26 @@ export function createSpriteLayer(entities) {
 }
 
 export function createCollisionLayer(level) {
+	const resolevedTiles = []
+	
 	const tileResolver = level.tileCollider.tiles 
 	const tileSize = tileResolver.tileSize
 
 	const getByIndexOriginal = tileResolver.getByIndex 
 	
+	tileResolver.getByIndex = function getByIndexFake(x, y) {
+		resolevedTiles.push({x, y})
+		// console.log(x, y)
+		return getByIndexOriginal.call(tileResolver, x, y)
+	}
+
+	return function drawCollision(context) {
+		context.strokeStyle = 'blue'
+		resolevedTiles.forEach(({x, y}) => {
+			context.beginPath()
+			context.rect(x * tileSize, y * tileSize, tileSize, tileSize)
+			context.stroke()
+		})
+		resolevedTiles.length = 0
+	}
 }
