@@ -1,21 +1,30 @@
 import Entity from './Entity.js'
-import {loadMarioSprites} from './sprites.js'
-import Velocity from './trait/Velocity.js'
+import {loadSpriteSheet} from './loader.js'
 import Jump from './trait/Jump.js'
 import Go from './trait/Go.js'
+import { createAnimation } from './animation.js';
+
 
 export function createMario() {
-	return loadMarioSprites()
+	return loadSpriteSheet('mario')
 	.then(sprite => {
 		const mario = new Entity()
 		mario.size.set(14, 16)
 
 		mario.addTrait(new Go())
 		mario.addTrait(new Jump())
-		// mario.addTrait(new Velocity())
 		
+		const runAnimation = createAnimation(['run-1', 'run-2', 'run-3'], 10)
+
+		function routeFrame(mario) {
+			if(mario.go.dir !== 0) {
+				return runAnimation(mario.go.distance)
+			}
+			return 'idle'
+		}
+
 		mario.draw = function drawMario(context) {
-			sprite.draw('idle', context, 0, 0)
+			sprite.draw(routeFrame(this), context, 0, 0, this.go.heading < 0)
 		}
 		return mario
 	})

@@ -20,7 +20,7 @@ Promise.all([loadLevel('1-1'), createMario()])
 	window.camera = camera
 	mario.pos.set(64, 180)
 	level.entities.add(mario)
-	level.comp.layers.push(createCollisionLayer(level), createCameraLayer(camera));
+	// level.comp.layers.push(createCollisionLayer(level), createCameraLayer(camera));
 
 	//Keyboard
 	const input = setupKeyboard(mario)
