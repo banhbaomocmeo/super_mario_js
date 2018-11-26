@@ -32,6 +32,11 @@ Promise.all([loadLevel('1-1'), createMario()])
 	const timer = new Timer(1/FPS)
 	timer.update = function update(deltaTime) {
 		level.update(deltaTime)
+		// camera follow mario
+		if (mario.pos.x > 100) {
+			camera.pos.x = mario.pos.x - 100
+		}
+
 		level.comp.draw(context, camera)
 
 	}
