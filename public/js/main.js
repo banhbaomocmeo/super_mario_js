@@ -1,5 +1,4 @@
-import {loadLevel} from './loader/level.js'
-import {loadMario} from './entity/Mario.js'
+import {createLevelLoader} from './loader/level.js'
 import Timer from './Timer.js'
 import {createCollisionLayer, createCameraLayer} from './layers.js'
 import {setupKeyboard} from './input.js'
@@ -8,27 +7,24 @@ import { setupMouseControl } from './debugger.js';
 import { loadEntities } from './entities.js';
 // import {model} from './test.js'
 
-const canvas = document.getElementById('screen')
-const context = canvas.getContext('2d')
+
+// main
+async function main(canvas) {
+	const context = canvas.getContext('2d')
+	const entityFactory = await loadEntities()
+	const loadLevel = await createLevelLoader(entityFactory)
+	const level = await loadLevel('1-1')
 
 // window.model = model
-Promise.all([loadLevel('1-1'), loadEntities()])
-.then(([level, factory]) => {
+
 	const FPS = 60
 	const camera = new Camera()
 	window.camera = camera
 
-	const mario = factory.mario()
+	const mario = entityFactory.mario()
 	mario.pos.set(64, 180)
 	level.entities.add(mario)
 
-	const goomba = factory.goomba()
-	goomba.pos.x = 220
-	level.entities.add(goomba)
-
-	const koopa = factory.koopa()
-	koopa.pos.x = 100
-	level.entities.add(koopa)
 	level.comp.layers.push(createCollisionLayer(level), createCameraLayer(camera));
 
 	//Keyboard
@@ -50,4 +46,7 @@ Promise.all([loadLevel('1-1'), loadEntities()])
 
 	}
 	timer.start()
-})
+}
+
+const canvas = document.getElementById('screen')
+main(canvas)

@@ -55,16 +55,13 @@ function expandRange(range) {
 
 function* expandRanges(ranges) {
     for (const range of ranges) {
-        for (const  item of expandRange(range)){
-            yield item
-        }
+        yield* expandRange(range)
     }
 }
 
-function expandTiles(tiles, patterns) {
-    const expandedTiles = []
+function* expandTiles(tiles, patterns) {
 
-    function walkTiles(tiles, offsetX, offsetY) {
+    function* walkTiles(tiles, offsetX, offsetY) {
         for (const tile of tiles) {
             for (const {x, y} of expandRanges(tile.ranges)){
     
@@ -73,47 +70,68 @@ function expandTiles(tiles, patterns) {
 
                 if (tile.pattern) {
                     const tiles = patterns[tile.pattern].tiles
-                    walkTiles(tiles, derivedX, derivedY)
+                    yield* walkTiles(tiles, derivedX, derivedY)
                 } else {
-                    expandedTiles.push({
+                    yield {
                         tile,
                         x: derivedX,
                         y: derivedY
-                    })                
+                    }        
                 }
             }
         }
     }
 
-    walkTiles(tiles, 0, 0)
-    return expandedTiles
+    yield* walkTiles(tiles, 0, 0)
 }
 
+function setupCollison(levelSpec, level) {
+    const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
+        return mergedTiles.concat(layerSpec.tiles)
+    }, [])
+    const collisionGrid = createCollisionGrid(mergedTiles, levelSpec.patterns)
+    level.setCollisionGrid(collisionGrid)
+}
 
+function setupBG(levelSpec, level, bgSprites) {
+    levelSpec.layers.forEach(layer => {
+        const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns)
+        const backgroundLayer = createBackgroundLayer(level, backgroundGrid, bgSprites)
+        level.comp.layers.push(backgroundLayer)
+    })
+    
+}
 
-export function loadLevel(name) {
-	return loadJSON(`/levels/${name}.json`)
-	.then(levelSpec => Promise.all([
-		levelSpec,
-		loadSpriteSheet(levelSpec.spriteSheet),
-	]))
-	.then(([levelSpec, bgSprites]) => {
-        const level = new Level()
-
-        const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
-            return mergedTiles.concat(layerSpec.tiles)
-        }, [])
-        const collisionGrid = createCollisionGrid(mergedTiles, levelSpec.patterns)
-        level.setCollisionGrid(collisionGrid)
-        levelSpec.layers.forEach(layer => {
-            const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns)
-            const backgroundLayer = createBackgroundLayer(level, backgroundGrid, bgSprites)
-            level.comp.layers.push(backgroundLayer)
+function setupEntities(levelSpec, level, entityFactory) {
+            
+        levelSpec.entities.forEach(({name, pos}) => {
+            const createEntity = entityFactory[name]
+            pos.forEach(([x, y]) => {
+                const entity = createEntity()
+                entity.pos.set(x, y)
+                level.entities.add(entity)
+            })
         })
-        
 		const spriteLayer = createSpriteLayer(level.entities)
 		level.comp.layers.push(spriteLayer)
 
-		return level
-	})
+}
+
+export function createLevelLoader(entityFactory) {
+    return function loadLevel(name) {
+        return loadJSON(`/levels/${name}.json`)
+        .then(levelSpec => Promise.all([
+            levelSpec,
+            loadSpriteSheet(levelSpec.spriteSheet),
+        ]))
+        .then(([levelSpec, bgSprites]) => {
+            const level = new Level()
+
+            setupCollison(levelSpec, level)
+            setupBG(levelSpec, level, bgSprites)
+            setupEntities(levelSpec, level, entityFactory)
+
+            return level
+        })
+    }
 }
