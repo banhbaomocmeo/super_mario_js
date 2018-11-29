@@ -4,11 +4,15 @@ export default class Trait {
 		this.NAME = name
 	}
 
+	collides(us, them) {
+		
+	}
+
 	obstruct(){
 		
 	}
 
 	update() {
-		console.warn('Unhandled update call in Trait')
+
 	}
 }
