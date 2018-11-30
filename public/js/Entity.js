@@ -10,6 +10,7 @@ export const Sides = {
 
 export default class Entity {
 	constructor() {
+		this.canCollide = true
 		this.pos = new Vec2D(0, 0)
 		this.vel = new Vec2D(0, 0)
 		this.size = new Vec2D(0, 0)
@@ -41,5 +42,9 @@ export default class Entity {
 			trait.update(this, deltaTime, level)
 		})
 		this.lifetime += deltaTime
+	}
+
+	draw() {
+
 	}
 }
