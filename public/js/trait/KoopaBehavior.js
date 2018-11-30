@@ -52,7 +52,7 @@ export default class KoopaBehavior extends Trait {
         } else if (this.state === States.HIDING) {
             us.killable.kill()
             us.vel.set(100, -200)
-            us.canCollide = false
+            us.solid.obstructs = false
         } else if(this.state === States.PANIC) {
             this.hide(us)
 

@@ -10,7 +10,7 @@ export const Sides = {
 
 export default class Entity {
 	constructor() {
-		this.canCollide = true
+
 		this.pos = new Vec2D(0, 0)
 		this.vel = new Vec2D(0, 0)
 		this.size = new Vec2D(0, 0)
@@ -31,9 +31,9 @@ export default class Entity {
 		})
 	}
 
-	obstruct(side) {
+	obstruct(side, match) {
 		this.traits.forEach(trait => {
-			trait.obstruct(this, side)
+			trait.obstruct(this, side, match)
 		})
 	}
 
@@ -46,5 +46,11 @@ export default class Entity {
 
 	draw() {
 
+	}
+
+	finalize() {
+		this.traits.forEach(trait => {
+			trait.finalize()
+		})
 	}
 }

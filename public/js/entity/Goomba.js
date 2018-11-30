@@ -3,6 +3,8 @@ import Entity from "../Entity.js";
 import PendulumWalk from "../trait/PendulumWalk.js";
 import GoombaBehavior from "../trait/GoombaBehavior.js";
 import Killable from "../trait/Killable.js";
+import Solid from "../trait/Solid.js";
+import Physics from '../trait/Physics.js';
 
 
 
@@ -30,6 +32,8 @@ function createGoombaFactory(sprite) {
         const goomba = new Entity()
         goomba.size.set(16, 16)
 
+        goomba.addTrait(new Physics())
+        goomba.addTrait(new Solid())
         goomba.addTrait(new PendulumWalk())
         goomba.addTrait(new GoombaBehavior())
         goomba.addTrait(new Killable())

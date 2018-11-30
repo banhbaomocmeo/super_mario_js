@@ -3,6 +3,8 @@ import Entity from "../Entity.js";
 import PendulumWalk from "../trait/PendulumWalk.js";
 import KoopaBehavior, { States } from "../trait/KoopaBehavior.js";
 import Killable from "../trait/Killable.js";
+import Solid from "../trait/Solid.js";
+import Physics from '../trait/Physics.js';
 
 
 
@@ -37,6 +39,8 @@ function createKoopaFactory(sprite) {
         const koopa = new Entity()
         koopa.size.set(16, 16)
         koopa.offset.y = 8
+        koopa.addTrait(new Physics())
+        koopa.addTrait(new Solid())
         koopa.addTrait(new PendulumWalk())
         koopa.addTrait(new KoopaBehavior())
         koopa.addTrait(new Killable())

@@ -4,6 +4,8 @@ import Jump from '../trait/Jump.js'
 import Go from '../trait/Go.js'
 import Stomper from '../trait/Stomper.js';
 import Killable from '../trait/Killable.js';
+import Solid from '../trait/Solid.js';
+import Physics from '../trait/Physics.js';
 
 const NORM_DRAG = 1/2000
 const FAST_DRAG = 1/5000
@@ -43,6 +45,8 @@ function createMarioFactory(sprite) {
 		const mario = new Entity()
 		mario.size.set(14, 16)
 
+		mario.addTrait(new Physics())
+		mario.addTrait(new Solid())
 		mario.addTrait(new Go())
 		mario.addTrait(new Jump())
 		mario.addTrait(new Stomper())
